@@ -1,0 +1,12 @@
+{
+    "mysql": {
+        "host":"localhost",
+        "db":"riotdb",
+        "user":"root",
+        "password":""
+    },
+    "api": {
+        "endpoint":"https://na1.api.riotgames.com",
+        "key":""
+    }
+}
