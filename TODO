@@ -1,4 +1,8 @@
 DB setup - SQL Alchemy
+    created models.py
+    added summoners table model
+    added user_matches table model
+    Need to write new db handler class
 CLI
 unit testing
 implement request_handler
