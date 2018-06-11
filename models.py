@@ -7,9 +7,9 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
-def db_connect():
+def db_connect(db_file):
     # TODO move db to config file
-    return create_engine('sqlite:///riot.db', echo=True)
+    return create_engine('sqlite:///{}'.format(db_file))
 
 
 def create_tables(engine):
@@ -19,7 +19,7 @@ def create_tables(engine):
 class Summoner(Base):
     __tablename__ = 'summoners'
 
-    summonerid = Column(Integer, primary_key=True, nullable=False)
+    id = Column(Integer, primary_key=True, nullable=False)  # summonerid
     accountid = Column(Integer, primary_key=True, nullable=False)
     name = Column(String)
     profileiconid = Column(Integer)
@@ -29,8 +29,8 @@ class Summoner(Base):
     matches = relationship("UserMatch", back_populates="summoner")
 
     def __repr__(self):
-        return "<Summoner(summonerid={}, accountid={}, name={}, profileiconid={}, revisiondate={}, summonerlevel={})>" \
-            .format(self.summonerid, self.accountid, self.name, self.profileiconid, self.revisiondate,
+        return "<Summoner(id={}, accountid={}, name={}, profileiconid={}, revisiondate={}, summonerlevel={})>" \
+            .format(self.id, self.accountid, self.name, self.profileiconid, self.revisiondate,
                     self.summonerlevel)
 
 

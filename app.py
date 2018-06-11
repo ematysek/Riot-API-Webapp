@@ -1,22 +1,18 @@
 import logging
 import logging.handlers
-import riot_request
-import db_request
-# import os
 import json
-
-configFile = 'config.json'
-configData = json.load(open(configFile))
-
-apiEndpoint = configData["api"]["endpoint"]
-apiKey = configData["api"]["key"]
-
-db = configData["mysql"]["db"]
-dbUsername = configData["mysql"]["user"]
-dbPassword = configData["mysql"]["password"]
+from request_handler import RequestHandler
 
 
 def main():
+    # TODO Create init_configs function
+    # TODO Create config files for loggers
+    configFile = 'config.json'
+    configData = json.load(open(configFile))
+
+    apiEndpoint = configData["api"]["endpoint"]
+    apiKey = configData["api"]["key"]
+
     # initialize logger and logger config
     logger = logging.getLogger('app')
     logger.setLevel(logging.INFO)
@@ -28,12 +24,17 @@ def main():
     logger.addHandler(handler)
     logger.info('Completed logger setup')
 
-    logger.info('initializing riot_request.riotconnector')
-    rc = riot_request.RiotConnector(apiEndpoint, apiKey)
+    sql_logger = logging.getLogger('sqlalchemy.engine')
+    sql_logger.setLevel(logging.INFO)
+    sql_logger.addHandler(handler)
 
-    dr = db_request.DBConnector(dbUsername, dbPassword, db)
+    logger.info('Initializing RequestHandler')
+    rh = RequestHandler(apiEndpoint, apiKey, 'riot.db')
 
-    dr.close()
+    # Proof of concept
+    rh.insert_or_update_summoner('chowdog')
+    accid = rh.get_accountid_by_name('chowdog')
+    rh.update_recent_usermatches(accid)
 
 
 if __name__ == '__main__':
