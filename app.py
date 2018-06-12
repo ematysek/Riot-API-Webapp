@@ -8,7 +8,7 @@ from util.request_handler import RequestHandler
 def main():
     # TODO Create init_configs function
     # TODO Create config files for loggers
-    configFile = 'config.json'
+    configFile = 'conf/config.json'
     configData = json.load(open(configFile))
 
     apiEndpoint = configData["api"]["endpoint"]
