@@ -1,5 +1,5 @@
 import logging
-import logging.handlers
+from logging.handlers import TimedRotatingFileHandler
 import json
 from request_handler import RequestHandler
 
@@ -17,7 +17,7 @@ def main():
     logger = logging.getLogger('app')
     logger.setLevel(logging.INFO)
 
-    handler = logging.FileHandler("logs/riot_app.log")
+    handler = TimedRotatingFileHandler("logs/riot_app.log", when='midnight', backupCount=7, utc=True)
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
