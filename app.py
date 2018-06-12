@@ -1,11 +1,15 @@
 import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
+import os
 
 from util.request_handler import RequestHandler
 
 
 def main():
+    # Create logs dir if it doesn't exist
+    if not os.path.exists('logs/'):
+        os.mkdir('logs/')
     # TODO Create init_configs function
     # TODO Create config files for loggers
     configFile = 'conf/config.json'
