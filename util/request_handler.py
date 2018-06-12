@@ -1,7 +1,6 @@
-import logging
-import riot_request
-from models import *
-import models
+from wrappers import riot_request
+from model.models import *
+from model import models
 from sqlalchemy.orm import sessionmaker
 
 

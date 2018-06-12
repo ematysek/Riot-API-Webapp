@@ -1,7 +1,8 @@
+import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
-import json
-from request_handler import RequestHandler
+
+from util.request_handler import RequestHandler
 
 
 def main():
