@@ -1,3 +1,4 @@
+# This file is deprecated
 import mysql.connector as mariadb
 import logging
 
