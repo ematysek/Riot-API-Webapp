@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Riot API Web App Home</title>
+</head>
+<body>
+<h1>Home Page</h1>
+{% for summoner in summoners %}
+<p>{{ summoner }}</p>
+{% endfor %}
+<table>
+    <tr>
+        <th>id</th>
+        <th>gameid</th>
+        <th>champion</th>
+    </tr>
+    {% for match in usermatches %}
+    <tr>
+        <td>{{ match.id }}</td>
+        <td>{{ match.gameid }}</td>
+        <td>{{ match.champion }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

@@ -4,6 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 import os
 
 from util.request_handler import RequestHandler
+import ui.webui
 
 
 def main():
@@ -40,6 +41,8 @@ def main():
     rh.insert_or_update_summoner('chowdog')
     accid = rh.get_accountid_by_name('chowdog')
     rh.update_recent_usermatches(accid)
+
+    ui.webui.launch()
 
 
 if __name__ == '__main__':
