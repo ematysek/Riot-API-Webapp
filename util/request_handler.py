@@ -3,6 +3,9 @@ from model.models import *
 from model import models
 from sqlalchemy.orm import sessionmaker
 
+# It may be better to move this to package level __init__.py
+Session = sessionmaker()
+
 
 class RequestHandler:
     def __init__(self, api_endpoint, api_key, db_file):
@@ -15,12 +18,15 @@ class RequestHandler:
         # Init DB Session
         self.dbengine = models.db_connect(db_file)
         models.create_tables(self.dbengine)
-        Session = sessionmaker(bind=self.dbengine)
+        Session.configure(bind=self.dbengine)
         self.session = Session()
 
     def __repr__(self):
         return "<RequestHandler(api_endpoint = {}, api_key = {}, db_file = {})>".format(self.api_endpoint, self.api_key,
                                                                                         self.db_file)
+
+    def close(self):
+        self.session.close()
 
     def get_all_summoners(self):
         q = self.session.query(Summoner).all()
