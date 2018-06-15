@@ -22,6 +22,14 @@ class RequestHandler:
         return "<RequestHandler(api_endpoint = {}, api_key = {}, db_file = {})>".format(self.api_endpoint, self.api_key,
                                                                                         self.db_file)
 
+    def get_all_summoners(self):
+        q = self.session.query(Summoner).all()
+        return q
+
+    def get_all_usermatches(self):
+        q = self.session.query(UserMatch).all()
+        return q
+
     def get_or_create(self, model, **kwargs):
         item = self.session.query(model).filter_by(**kwargs).first()
         if item:
