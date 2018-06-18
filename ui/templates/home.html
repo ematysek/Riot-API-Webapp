@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Riot API Web App Home</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block body %}
 <h1>Home Page</h1>
 {% for summoner in summoners %}
 <p>{{ summoner }}</p>
@@ -23,5 +18,4 @@
     </tr>
     {% endfor %}
 </table>
-</body>
-</html>
+{% endblock body %}
