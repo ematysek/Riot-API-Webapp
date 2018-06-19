@@ -4,7 +4,7 @@ from logging.handlers import TimedRotatingFileHandler
 import os
 
 from util.request_handler import RequestHandler
-#import ui.webui
+from conf.config import APIConfig, load_config
 
 
 def main():
@@ -13,11 +13,7 @@ def main():
         os.mkdir('logs/')
     # TODO Create init_configs function
     # TODO Create config files for loggers
-    configFile = 'conf/config.json'
-    configData = json.load(open(configFile))
-
-    apiEndpoint = configData["api"]["endpoint"]
-    apiKey = configData["api"]["key"]
+    load_config()
 
     # initialize logger and logger config
     logger = logging.getLogger('app')
@@ -35,14 +31,12 @@ def main():
     sql_logger.addHandler(handler)
 
     logger.info('Initializing RequestHandler')
-    rh = RequestHandler(apiEndpoint, apiKey, 'riot.db')
+    rh = RequestHandler()
 
     # Proof of concept
     rh.insert_or_update_summoner('wellthisisawkwrd')
     accid = rh.get_accountid_by_name('wellthisisawkwrd')
     rh.update_recent_usermatches(accid)
-
-    #ui.webui.launch()
 
 
 if __name__ == '__main__':

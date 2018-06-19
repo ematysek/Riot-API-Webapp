@@ -2,18 +2,19 @@ from wrappers import riot_request
 from model.models import *
 from model import models
 from sqlalchemy.orm import sessionmaker
+from conf.config import DBConfig, APIConfig
 
 # It may be better to move this to package level __init__.py
 Session = sessionmaker()
 
 
 class RequestHandler:
-    def __init__(self, api_endpoint, api_key, db_file):
-        self.api_endpoint = api_endpoint
-        self.api_key = api_key
-        self.db_file = db_file
+    def __init__(self, api_endpoint=None, api_key=None, db_file=None):
+        self.api_endpoint = api_endpoint or APIConfig().api_endpoint
+        self.api_key = api_key or APIConfig().api_key
+        self.db_file = db_file or DBConfig().db_file
         # Init RiotConnector
-        self.rc = riot_request.RiotConnector(api_endpoint, api_key)
+        self.rc = riot_request.RiotConnector(self.api_endpoint, self.api_key)
 
         # Init DB Session
         self.dbengine = models.db_connect(db_file)
