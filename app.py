@@ -1,11 +1,10 @@
-import json
 import logging
-from logging.handlers import TimedRotatingFileHandler
 import os
+from logging.handlers import TimedRotatingFileHandler
 
-from util.request_handler import RequestHandler
-from conf.config import APIConfig, load_config
+from conf.config import load_config
 from ui.webui import launch
+from util.request_handler import RequestHandler
 
 
 def main():
@@ -27,9 +26,14 @@ def main():
     logger.addHandler(handler)
     logger.info('Completed logger setup')
 
+    # Set up sqlAlchemy logger
     sql_logger = logging.getLogger('sqlalchemy.engine')
     sql_logger.setLevel(logging.INFO)
     sql_logger.addHandler(handler)
+
+    # Set up Flask access logger
+    wsgi_logger = logging.getLogger('werkzeug')
+    wsgi_logger.addHandler(handler)
 
     logger.info('Initializing RequestHandler')
     rh = RequestHandler()
@@ -39,7 +43,8 @@ def main():
     accid = rh.get_accountid_by_name('wellthisisawkwrd')
     rh.update_recent_usermatches(accid)
 
-    launch()
+    launch(handler)
+
 
 if __name__ == '__main__':
     main()

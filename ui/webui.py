@@ -1,8 +1,9 @@
 from flask import Flask, render_template, flash, redirect, url_for
-from util.request_handler import RequestHandler
 
 from conf.config import FlaskConfig
 from ui.forms import SummonerSearchForm
+from util.request_handler import RequestHandler
+
 app = Flask(__name__)
 
 
@@ -19,8 +20,9 @@ def home():
     return render_template('home.html', summoners=sums, usermatches=um, form=form)
 
 
-def launch():
+def launch(logging_handler):
     app.config['SECRET_KEY'] = FlaskConfig().secret_key
+    app.logger.addHandler(logging_handler)
     app.run(host='0.0.0.0')
 
 
