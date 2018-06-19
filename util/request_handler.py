@@ -17,7 +17,7 @@ class RequestHandler:
         self.rc = riot_request.RiotConnector(self.api_endpoint, self.api_key)
 
         # Init DB Session
-        self.dbengine = models.db_connect(db_file)
+        self.dbengine = models.db_connect(self.db_file)
         models.create_tables(self.dbengine)
         Session.configure(bind=self.dbengine)
         self.session = Session()
