@@ -5,6 +5,7 @@ import os
 
 from util.request_handler import RequestHandler
 from conf.config import APIConfig, load_config
+from ui.webui import launch
 
 
 def main():
@@ -38,6 +39,7 @@ def main():
     accid = rh.get_accountid_by_name('wellthisisawkwrd')
     rh.update_recent_usermatches(accid)
 
+    launch()
 
 if __name__ == '__main__':
     main()
