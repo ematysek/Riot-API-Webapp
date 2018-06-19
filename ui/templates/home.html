@@ -28,15 +28,34 @@
                 </div>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <form class="form-inline my-2 my-lg-0" method="POST" action="">
+            {{ form.hidden_tag() }}
+            {{ form.summoner(class="form-control mr-sm-2", placeholder="Summoner Search") }}
+            <!-- <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"> -->
+            {{ form.submit(class="btn btn-outline-success my-2 my-sm-0") }}
+            <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
         </form>
     </div>
 </nav>
 <main role="main" class="container">
 
     <div class="starter-template">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for cat, msg in messages %}
+                    <div class="alert alert-{{ cat }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% if form.summoner.errors %}
+            <div class="alert alert-danger">
+                {% for error in form.summoner.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
         <h1>Home Page</h1>
         <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a
             mostly barebones HTML document.</p>

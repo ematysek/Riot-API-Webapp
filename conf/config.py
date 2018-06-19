@@ -47,3 +47,13 @@ class DBConfig(Config):
     @property
     def db_file(self):
         return self.get_db_conf().get('db_file')
+
+
+class FlaskConfig(Config):
+
+    def get_flask_conf(self):
+        return self.get_property('flask')
+
+    @property
+    def secret_key(self):
+        return self.get_flask_conf().get('SECRET_KEY')

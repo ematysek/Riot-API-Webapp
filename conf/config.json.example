@@ -5,5 +5,8 @@
     "api": {
         "endpoint":"https://na1.api.riotgames.com",
         "key":""
+    },
+    "flask": {
+        "SECRET_KEY":"9867eea89c294b9162dba0890b7dfb98"
     }
 }
