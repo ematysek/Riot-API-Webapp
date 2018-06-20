@@ -1,8 +1,8 @@
 import logging
+import logging.config
 import os
-from logging.handlers import TimedRotatingFileHandler
 
-from conf.config import load_config
+from conf.config import load_config, get_logger_config
 from ui.webui import launch
 from util.request_handler import RequestHandler
 
@@ -19,21 +19,8 @@ def main():
     logger = logging.getLogger('app')
     logger.setLevel(logging.INFO)
 
-    handler = TimedRotatingFileHandler("logs/riot_app.log", when='midnight', backupCount=7, utc=True)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.info('Completed logger setup')
-
-    # Set up sqlAlchemy logger
-    sql_logger = logging.getLogger('sqlalchemy.engine')
-    sql_logger.setLevel(logging.INFO)
-    sql_logger.addHandler(handler)
-
-    # Set up Flask access logger
-    wsgi_logger = logging.getLogger('werkzeug')
-    wsgi_logger.addHandler(handler)
+    # initialize logger
+    logger = logging.getLogger(__name__)
 
     logger.info('Initializing RequestHandler')
     rh = RequestHandler()
@@ -43,7 +30,7 @@ def main():
     accid = rh.get_accountid_by_name('wellthisisawkwrd')
     rh.update_recent_usermatches(accid)
 
-    launch(handler)
+    launch()
 
 
 if __name__ == '__main__':

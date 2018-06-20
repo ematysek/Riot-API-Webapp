@@ -20,9 +20,8 @@ def home():
     return render_template('home.html', summoners=sums, usermatches=um, form=form)
 
 
-def launch(logging_handler):
+def launch():
     app.config['SECRET_KEY'] = FlaskConfig().secret_key
-    app.logger.addHandler(logging_handler)
     app.run(host='0.0.0.0')
 
 
