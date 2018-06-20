@@ -15,9 +15,7 @@ def main():
     # TODO Create config files for loggers
     load_config()
 
-    # initialize logger and logger config
-    logger = logging.getLogger('app')
-    logger.setLevel(logging.INFO)
+    logging.config.dictConfig(get_logger_config())
 
     # initialize logger
     logger = logging.getLogger(__name__)
