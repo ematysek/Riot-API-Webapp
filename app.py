@@ -1,10 +1,9 @@
-import json
 import logging
-from logging.handlers import TimedRotatingFileHandler
+import logging.config
 import os
 
+from conf.config import load_config, get_logger_config
 from util.request_handler import RequestHandler
-from conf.config import APIConfig, load_config
 
 
 def main():
@@ -15,20 +14,10 @@ def main():
     # TODO Create config files for loggers
     load_config()
 
-    # initialize logger and logger config
-    logger = logging.getLogger('app')
-    logger.setLevel(logging.INFO)
+    logging.config.dictConfig(get_logger_config())
 
-    handler = TimedRotatingFileHandler("logs/riot_app.log", when='midnight', backupCount=7, utc=True)
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.info('Completed logger setup')
-
-    sql_logger = logging.getLogger('sqlalchemy.engine')
-    sql_logger.setLevel(logging.INFO)
-    sql_logger.addHandler(handler)
+    # initialize logger
+    logger = logging.getLogger(__name__)
 
     logger.info('Initializing RequestHandler')
     rh = RequestHandler()

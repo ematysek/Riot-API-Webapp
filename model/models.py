@@ -1,17 +1,21 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy import create_engine
+import logging
+
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 Base = declarative_base()
+logger = logging.getLogger(__name__)
 
 
 def db_connect(db_file):
     # TODO move db to config file
+    logger.info("Initializing db {}".format(db_file))
     return create_engine('sqlite:///{}'.format(db_file))
 
 
 def create_tables(engine):
+    logger.info("Creating tables")
     Base.metadata.create_all(engine)
 
 

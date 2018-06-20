@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "base_formatter": {
+      "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "base_formatter",
+      "stream": "ext://sys.stdout"
+    },
+    "base_file_handler": {
+      "class": "logging.handlers.TimedRotatingFileHandler",
+      "level": "INFO",
+      "formatter": "base_formatter",
+      "filename": "logs/riot_webapp.log",
+      "when": "midnight",
+      "backupCount": 7,
+      "utc": true,
+      "encoding": "utf8"
+    }
+  },
+  "loggers": {
+    "sqlalchemy.engine": {
+      "level": "WARN",
+      "handlers": [
+        "base_file_handler"
+      ]
+    },
+    "": {
+      "level": "INFO",
+      "handlers": [
+        "base_file_handler"
+      ]
+    }
+  }
+}

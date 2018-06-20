@@ -1,7 +1,7 @@
 import requests
 import logging
 
-logger = logging.getLogger('app.riot_request')
+logger = logging.getLogger(__name__)
 
 
 class RiotConnector:
@@ -17,10 +17,10 @@ class RiotConnector:
 
     def getSummoner(self, name):
         logger.info('getsummoner called')
-        # logging.basicConfig(level=logging.DEBUG)
         payload = {'api_key': self.api_key}
         r = requests.get(self.api_endpoint + '/lol/summoner/v3/summoners/by-name/' + str(name), params=payload)
         logger.info('url used: %s', r.url)
+        logger.info("response code: {}".format(r.status_code))
         return r.json()
 
     def getSummonerMatchList(self, accountid):
@@ -29,6 +29,7 @@ class RiotConnector:
         response = requests.get(self.api_endpoint + '/lol/match/v3/matchlists/by-account/' + str(accountid),
                                 params=payload)
         logger.info('Response URL: %s', response.url)
+        logger.info("response code: {}".format(response.status_code))
         return response.json()
 
     def getSummonerMmrBySummonerId(self, summonerid):
@@ -36,5 +37,6 @@ class RiotConnector:
         payload = {'api_key': self.api_key}
         response = requests.get(self.api_endpoint + '/lol/league/v3/mmr-af/by-summoner/' + str(summonerid),
                                 params=payload)
-        logger.info('Rsponse URL: %s', response.url)
+        logger.info('Response URL: %s', response.url)
+        logger.info("response code: {}".format(response.status_code))
         return response.json()

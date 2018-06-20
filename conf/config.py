@@ -1,11 +1,15 @@
-import os
 import json
+import os
 
 DEFAULT_CONFIG_LOCATION = "conf/config.json"
 global_conf = None
+DEFAULT_LOGGER_CONFIG_LOCATION = "conf/logger.json"
+logger_conf = None
 
 
 def load_config(config_location=None):
+    # TODO add support for env variables
+    # Base Config
     conf_location = config_location or DEFAULT_CONFIG_LOCATION
     if not os.path.isfile(conf_location):
         print("Could not find config file in {}".format(conf_location))
@@ -14,6 +18,20 @@ def load_config(config_location=None):
         j = json.load(conf_file)
         global global_conf
         global_conf = j
+
+    # Logger Config
+    logger_conf_location = DEFAULT_LOGGER_CONFIG_LOCATION
+    if not os.path.isfile(logger_conf_location):
+        print("Could not find logger config file in {}".format(logger_conf_location))
+        exit()
+    with open(logger_conf_location, 'r') as logger_conf_file:
+        k = json.load(logger_conf_file)
+        global logger_conf
+        logger_conf = k
+
+
+def get_logger_config():
+    return logger_conf
 
 
 class Config:
