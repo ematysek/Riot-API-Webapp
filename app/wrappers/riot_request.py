@@ -9,8 +9,6 @@ class RiotConnector:
         self.api_endpoint = api_endpoint
         self.api_key = api_key
         logger.info('RiotConnector constructed: {}'.format(self))
-        logger.info('api_endpoint: %s', api_endpoint)
-        logger.info('api_key: %s', api_key)
 
     def __repr__(self):
         return "<RiotConnector(api_endpoint = {}, api_key = {})>".format(self.api_endpoint, self.api_key)

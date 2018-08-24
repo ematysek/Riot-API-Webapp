@@ -34,10 +34,16 @@
     "werkzeug":{
       "level": "INFO",
       "handlers": [
-        "console"
+        "console", "base_file_handler"
       ]
     },
-    "": {
+    "flask.app":{
+      "level": "INFO",
+      "handlers": [
+        "console", "base_file_handler"
+      ]
+    },
+    "app": {
       "level": "INFO",
       "handlers": [
         "base_file_handler"

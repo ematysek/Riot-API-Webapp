@@ -1,0 +1,45 @@
+{% extends "base-navbar.html" %}
+{% block main %}
+<main role="main" class="container">
+
+    <div class="starter-template">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for cat, msg in messages %}
+                    <div class="alert alert-{{ cat }}">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% if form.summoner.errors %}
+            <div class="alert alert-danger">
+                {% for error in form.summoner.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h1>Home Page</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a
+            mostly barebones HTML document.</p>
+        {% for summoner in summoners %}
+            <p class="lead">{{ summoner }}</p>
+        {% endfor %}
+        <table class="lead">
+            <tr>
+                <th>id</th>
+                <th>gameid</th>
+                <th>champion</th>
+            </tr>
+            {% for match in matches %}
+            <tr>
+                <td>{{ match.id }}</td>
+                <td>{{ match.gameid }}</td>
+                <td>{{ match.champion }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</main><!-- /.container -->
+{% endblock main %}

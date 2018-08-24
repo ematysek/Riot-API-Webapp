@@ -1,0 +1,2 @@
+FLASK_APP=rapi.py
+FLASK_DEBUG=true
