@@ -29,6 +29,7 @@ def load_config(config_location=None):
         global logger_conf
         logger_conf = k
 
+
 def load_logger_config(logger_conf_loc=None):
     logger_conf_location = logger_conf_loc or DEFAULT_LOGGER_CONFIG_LOCATION
     if not os.path.isfile(logger_conf_location):
@@ -36,7 +37,6 @@ def load_logger_config(logger_conf_loc=None):
         exit()
     with open(logger_conf_location, 'r') as logger_conf_file:
         return json.load(logger_conf_file)
-
 
 
 def get_logger_config():

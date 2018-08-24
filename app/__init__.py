@@ -8,16 +8,17 @@ migrate = Migrate()
 
 
 def create_app(default_configs=Config):
-    app = Flask(__name__)
+    new_app = Flask(__name__)
 
     # Load configs
-    app.config.from_object(default_configs)
+    new_app.config.from_object(default_configs)
 
     # Init flask extensions
-    db.init_app(app)
-    migrate.init_app(app, db)
+    db.init_app(new_app)
+    migrate.init_app(new_app, db)
 
-    return app
+    return new_app
 
 
+# Import down here to avoid circular dependency
 import app.flask_models
