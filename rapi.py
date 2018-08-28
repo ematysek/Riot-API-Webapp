@@ -2,12 +2,12 @@ import logging
 import logging.config
 import os
 
-from conf.config import load_config, get_logger_config, load_logger_config
-from app.util.request_handler import RequestHandler
-from app import create_app, db
 from flask import render_template, redirect, url_for, flash
+
+from app import create_app, db
 from app.forms import SummonerSearchForm
-from app.flask_models import Summoner
+from app.util.request_handler import RequestHandler
+from conf.config import load_config, get_logger_config, load_logger_config
 
 app = create_app()
 
@@ -16,7 +16,6 @@ logging.config.dictConfig(load_logger_config())
 app.logger.info("app created")
 app.logger.info("debug: {}".format(app.debug))
 app.logger.info("secret key: {}".format(app.secret_key))
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -40,7 +39,7 @@ def search_name(summoner_name):
     return render_template('summoner.html', summoner=sum, form=form)
 
 
-@app.route("/test")
+@app.route("/test", methods=['GET', 'POST'])
 def test():
     form = SummonerSearchForm()
     if form.validate_on_submit():
@@ -49,10 +48,9 @@ def test():
     app.logger.info(os.environ.get('API_ENDPOINT'))
     app.logger.info(os.environ.get('API_KEY'))
     rh = RequestHandler(db, api_endpoint=os.environ.get('API_ENDPOINT'), api_key=os.environ.get('API_KEY'))
-    # rh.update_recent_usermatches(rh.get_accountid_by_name('colorless'))
     sums = rh.get_all_summoners()
     matches = rh.get_all_usermatches()
-    app.logger.info(sums)
+    app.logger.debug(sums)
     return render_template('test.html', summoners=sums, matches=matches, form=form)
 
 
