@@ -9,9 +9,9 @@ from app.forms import SummonerSearchForm
 from app.util.request_handler import RequestHandler
 from conf.config import load_config, get_logger_config, load_logger_config
 
-app = create_app()
-
 logging.config.dictConfig(load_logger_config())
+
+app = create_app()
 
 app.logger.info("app created")
 app.logger.info("debug: {}".format(app.debug))
@@ -78,4 +78,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    app.run()
