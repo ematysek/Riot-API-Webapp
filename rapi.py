@@ -9,6 +9,10 @@ from app.forms import SummonerSearchForm
 from app.util.request_handler import RequestHandler
 from conf.config import load_config, get_logger_config, load_logger_config
 
+# Create logs dir if it doesn't exist
+if not os.path.exists('logs/'):
+    os.mkdir('logs/')
+
 logging.config.dictConfig(load_logger_config())
 
 app = create_app()
@@ -55,10 +59,6 @@ def test():
 
 
 def main():
-    # Create logs dir if it doesn't exist
-    if not os.path.exists('logs/'):
-        os.mkdir('logs/')
-
     load_config()
 
     logging.config.dictConfig(get_logger_config())
