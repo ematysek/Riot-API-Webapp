@@ -46,7 +46,7 @@
     "app": {
       "level": "INFO",
       "handlers": [
-        "base_file_handler"
+        "base_file_handler", "console"
       ]
     }
   }

@@ -1,6 +1,6 @@
 from flask import Flask, current_app
 from flask_sqlalchemy import SQLAlchemy
-from app.default_conf import Config
+from app.default_conf import Config, init_env
 from flask_migrate import Migrate
 
 db = SQLAlchemy()
@@ -8,6 +8,7 @@ migrate = Migrate()
 
 
 def create_app(default_configs=Config):
+    init_env()
     new_app = Flask(__name__)
 
     # Load configs
@@ -21,4 +22,4 @@ def create_app(default_configs=Config):
 
 
 # Import down here to avoid circular dependency
-import app.flask_models
+# import app.flask_models
