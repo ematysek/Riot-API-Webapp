@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for
 from app import db
 from app.main import bp
 from app.main.forms import SummonerSearchForm
-from app.util.request_handler import RequestHandler
+from app.util import RequestHandler
 
 logger = logging.getLogger(__name__)
 
