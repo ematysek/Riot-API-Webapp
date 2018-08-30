@@ -1,7 +1,7 @@
 import logging
 
 from app.flask_models import Summoner, UserMatch, UserLeagues
-from app.wrappers import riot_request
+from app.wrappers import RiotConnector
 
 
 class RequestHandler:
@@ -11,7 +11,7 @@ class RequestHandler:
         self.api_endpoint = api_endpoint
         self.api_key = api_key
         # Init RiotConnector
-        self.rc = riot_request.RiotConnector(self.api_endpoint, self.api_key)
+        self.rc = RiotConnector(self.api_endpoint, self.api_key)
 
         # Init DB Session
         self.db = db
