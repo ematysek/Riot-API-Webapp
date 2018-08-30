@@ -25,6 +25,7 @@
         {% for summoner in summoners %}
             <p class="lead">{{ summoner }}</p>
         {% endfor %}
+        {% if matches %}
         <table class="lead">
             <tr>
                 <th>id</th>
@@ -39,6 +40,12 @@
             </tr>
             {% endfor %}
         </table>
+        {% endif %}
+        {% if leagues %}
+            {% for league in leagues %}
+                <p class="lead">{{ league }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
 
 </main><!-- /.container -->

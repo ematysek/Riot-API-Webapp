@@ -1,6 +1,6 @@
 import logging
 
-from app.flask_models import Summoner, UserMatch
+from app.flask_models import Summoner, UserMatch, UserLeagues
 from app.wrappers import riot_request
 
 
@@ -34,6 +34,12 @@ class RequestHandler:
     def get_all_usermatches(self):
         self.logger.info("returning all usermatches")
         q = self.db.session.query(UserMatch).all()
+        self.logger.debug(q)
+        return q
+
+    def get_all_userleagues(self):
+        self.logger.info("Returning all userleagues")
+        q = UserLeagues.query.all()
         self.logger.debug(q)
         return q
 
