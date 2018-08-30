@@ -12,4 +12,4 @@ EXPOSE 5000
 
 RUN flask db upgrade
 
-CMD [ "python", "./rapi.py", "--host", "0.0.0.0" ]
+CMD [ "flask", "run", "--host", "0.0.0.0" ]
