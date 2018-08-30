@@ -1,7 +1,8 @@
-from flask import Flask, current_app
-from flask_sqlalchemy import SQLAlchemy
-from app.default_conf import Config, init_env
+from flask import Flask
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+from app.default_conf import Config, init_env
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -18,8 +19,11 @@ def create_app(default_configs=Config):
     db.init_app(new_app)
     migrate.init_app(new_app, db)
 
-    return new_app
+    # Register Blueprints
+    from app.main.routes import bp as main_bp
+    new_app.register_blueprint(main_bp)
 
+    return new_app
 
 # Import down here to avoid circular dependency
 # import app.flask_models

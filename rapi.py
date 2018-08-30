@@ -1,13 +1,8 @@
-import logging
 import logging.config
 import os
 
-from flask import render_template, redirect, url_for, flash
-
-from app import create_app, db
-from app.forms import SummonerSearchForm
-from app.util.request_handler import RequestHandler
-from conf.config import load_config, get_logger_config, load_logger_config
+from app import create_app
+from conf.config import load_logger_config
 
 # Create logs dir if it doesn't exist
 if not os.path.exists('logs/'):
@@ -19,63 +14,7 @@ app = create_app()
 
 app.logger.info("app created")
 app.logger.info("debug: {}".format(app.debug))
-app.logger.info("secret key: {}".format(app.secret_key))
-
-
-@app.route('/', methods=['GET', 'POST'])
-@app.route("/index", methods=['GET', 'POST'])
-def index():
-    form = SummonerSearchForm()
-    if form.validate_on_submit():
-        flash("Searched for {}".format(form.summoner.data), 'success')
-        return redirect(url_for('search_name', summoner_name=form.summoner.data))
-    return render_template('index.html', form=form)
-
-
-@app.route('/summoner/name/<summoner_name>', methods=['GET', 'POST'])
-def search_name(summoner_name):
-    form = SummonerSearchForm()
-    if form.validate_on_submit():
-        flash("Searched for {}".format(form.summoner.data), 'success')
-        return redirect(url_for('search_name', summoner_name=form.summoner.data))
-    rh = RequestHandler(db, api_endpoint=os.environ.get('API_ENDPOINT'), api_key=os.environ.get('API_KEY'))
-    retrieved_sum = rh.insert_or_update_summoner(summoner_name)
-    return render_template('summoner.html', summoner=retrieved_sum, form=form)
-
-
-@app.route("/test", methods=['GET', 'POST'])
-def test():
-    form = SummonerSearchForm()
-    if form.validate_on_submit():
-        flash("Searched for {}".format(form.summoner.data), 'success')
-        return redirect(url_for('search_name', summoner_name=form.summoner.data))
-    app.logger.info(os.environ.get('API_ENDPOINT'))
-    app.logger.info(os.environ.get('API_KEY'))
-    rh = RequestHandler(db, api_endpoint=os.environ.get('API_ENDPOINT'), api_key=os.environ.get('API_KEY'))
-    sums = rh.get_all_summoners()
-    matches = rh.get_all_usermatches()
-    app.logger.debug(sums)
-    return render_template('test.html', summoners=sums, matches=matches, form=form)
-
-
-def main():
-    load_config()
-
-    logging.config.dictConfig(get_logger_config())
-
-    # initialize logger
-    logger = logging.getLogger(__name__)
-
-    logger.info('Initializing RequestHandler')
-    rh = RequestHandler()
-
-    # Proof of concept
-    #    rh.insert_or_update_summoner('wellthisisawkwrd')
-    #    accid = rh.get_accountid_by_name('wellthisisawkwrd')
-    #    rh.update_recent_usermatches(accid)
-
-    # launch()
-
+app.logger.debug("secret key: {}".format(app.secret_key))
 
 if __name__ == '__main__':
     app.run()
