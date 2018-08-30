@@ -5,14 +5,14 @@ class Summoner(db.Model):
     __tablename__ = 'summoners'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)  # summonerid
-    accountid = db.Column(db.Integer, primary_key=True, nullable=False)
+    accountid = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String, index=True)
     profileiconid = db.Column(db.Integer)
     revisiondate = db.Column(db.Integer)
     summonerlevel = db.Column(db.Integer)
 
     matches = db.relationship("UserMatch", back_populates="summoner")
-    leagues = db.relationship("UserLeagues", back_populates="summoner")
+    leagues = db.relationship("UserLeague", back_populates="summoner")
 
     def __repr__(self):
         return "<Summoner(id={}, accountid={}, name={}, profileiconid={}, revisiondate={}, summonerlevel={})>" \
@@ -42,7 +42,7 @@ class UserMatch(db.Model):
                                              self.timestamp, self.queue, self.role, self.season)
 
 
-class UserLeagues(db.Model):
+class UserLeague(db.Model):
     __tablename__ = "user_leagues"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -63,3 +63,11 @@ class UserLeagues(db.Model):
     leagueid = db.Column(db.String)
 
     summoner = db.relationship("Summoner", back_populates="leagues")
+
+    def __repr__(self):
+        return "<UserLeague(summonerid={}, queuetype={}, wins={}, losses={}, rank={}, teir={}, leaguepoint={}, " \
+               "hotstreak={}, veteran={}, playerorteamid={}, leaguename={}, playerorteamname={}, inactive={}, " \
+               "freshblood={}, leagueid={})>".format(self.summonerid, self.queuetype, self.wins, self.losses, self.rank,
+                                                     self.tier, self.leaguepoints, self.hotstreak, self.veteran,
+                                                     self.playerorteamid, self.leaguename, self.playerorteamname,
+                                                     self.inactive, self.freshblood, self.leagueid)

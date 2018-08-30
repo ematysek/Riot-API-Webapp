@@ -28,7 +28,10 @@ def search_name(summoner_name):
         # flash("Searched for {}".format(form.summoner.data), 'success')
         return redirect(url_for('main.search_name', summoner_name=form.summoner.data))
     rh = RequestHandler(db, api_endpoint=os.environ.get('API_ENDPOINT'), api_key=os.environ.get('API_KEY'))
+    # For now we will update all summoner information on search
     retrieved_sum = rh.insert_or_update_summoner(summoner_name)
+    rh.update_recent_usermatches(retrieved_sum.accountid)
+    rh.update_leagues(retrieved_sum.id)
     return render_template('summoner.html', summoner=retrieved_sum, form=form)
 
 

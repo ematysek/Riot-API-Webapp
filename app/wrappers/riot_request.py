@@ -19,6 +19,8 @@ class RiotConnector:
         r = requests.get(self.api_endpoint + '/lol/summoner/v3/summoners/by-name/' + str(name), params=payload)
         self.logger.info('url used: %s', r.url)
         self.logger.info("response code: {}".format(r.status_code))
+        if not r.status_code == 200:
+            return None
         return r.json()
 
     def getSummonerMatchList(self, accountid):
@@ -37,4 +39,15 @@ class RiotConnector:
                                 params=payload)
         self.logger.info('Response URL: %s', response.url)
         self.logger.info("response code: {}".format(response.status_code))
+        return response.json()
+
+    def get_summoner_leagues_by_summoner_id(self, summonerid):
+        self.logger.info("Getting leagues for summonerid: {}".format(summonerid))
+        payload = {'api_key': self.api_key}
+        response = requests.get("{}/lol/league/v3/positions/by-summoner/{}".format(self.api_endpoint, summonerid),
+                                params=payload)
+        self.logger.info("Response URL: {}".format(response.url))
+        self.logger.info("Response code: {}".format(response.status_code))
+        if not response.status_code == 200:
+            return None
         return response.json()
