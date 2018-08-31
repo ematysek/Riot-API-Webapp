@@ -27,24 +27,46 @@ class RequestHandler:
         self.db.session.close()
 
     def get_all_summoners(self):
+        """
+        Get all Summoners currently in the DB.
+        :rtype: List[Summoner]
+        :return: List of all summoners in the DB
+        """
         self.logger.info("returning all summoners")
         q = self.db.session.query(Summoner).all()
         self.logger.debug(q)
         return q
 
     def get_all_usermatches(self):
+        """
+        Get all UserMatches currently in the DB.
+        :return: List of all UserMatch objs in the DB
+        """
         self.logger.info("returning all usermatches")
         q = self.db.session.query(UserMatch).all()
         self.logger.debug(q)
         return q
 
     def get_all_userleagues(self):
+        """
+        Get all UserLeagues currently in the DB.
+        :return: List of all UserLeague objs in the DB
+        """
         self.logger.info("Returning all userleagues")
         q = UserLeague.query.all()
         self.logger.debug(q)
         return q
 
     def get_or_create(self, model, **kwargs):
+        """
+        If an object matching the kwargs provided exists, then return that object.
+        Otherwise, create the object and insert it into the DB.
+
+        Useful for tables with static data.
+        :param model: DB Model you want to create
+        :param kwargs: kwargs needed to create that Model
+        :return: Created Model object
+        """
         self.logger.info("get or create on {}".format(model.__tablename__))
         item = self.db.session.query(model).filter_by(**kwargs).first()
         if item:
@@ -73,10 +95,13 @@ class RequestHandler:
         """
         Get the Summoner object by specified name.
         If the Summoner does not exist in the DB, then we call `insert_or_update_summoner'.
-        This method is useful because Summoner attributes summonerid and accountid don't change, so in functions that just need these attributes we do not need to make an API call if the summoner exists in the DB.
+
+        This method is useful because Summoner attributes summonerid and accountid don't change, so in functions that
+        just need these attributes we do not need to make an API call if the summoner exists in the DB.
 
         :param name: name of summoner to return
-        :return: Summoner model object or None if the summoner was not found in the DB and there was an issue retrieving it from the API
+        :return: Summoner model object or None if the summoner was not found in the DB and there was an issue retrieving
+                  it from the API
         """
         self.logger.info("Getting Summoner: {}".format(name))
         # Check db first
@@ -90,6 +115,12 @@ class RequestHandler:
             return self.insert_or_update_summoner(name)
 
     def insert_or_update_summoner(self, name: str) -> Optional[Summoner]:
+        """
+        Insert or update the Summoner with the given name by querying the API for the most recent Summoner data.
+        If the Summoner does not exist in summoners table then we insert, otherwise update the existing data.
+        :param name: Name of the Summoner to update
+        :return: Summoner object or none if we got an unexpected response from the API
+        """
         self.logger.info("insert or update summoner: {}".format(name))
         summoner_json = self.rc.getSummoner(name)
         if not summoner_json:
@@ -105,7 +136,7 @@ class RequestHandler:
     def update_leagues(self, summonerid: int):
         """
         Get most recent leagues info from API for summonerid and update user_leagues table accordingly
-        :param summonerid:
+        :param summonerid: summonerid for the Summoner we want to grab updated league info for
         """
         self.logger.info("Update leagues info for summonerid: {}".format(summonerid))
         # Get leagues data from API
@@ -130,7 +161,11 @@ class RequestHandler:
                 self.db.session.add(UserLeague(**RequestHandler.lower_keys(league_dict)))
         self.db.session.commit()
 
-    def update_recent_usermatches(self, accountid):
+    def update_recent_usermatches(self, accountid: int):
+        """
+        Get 100 most recent matches and insert them into the DB if they don't exist already.
+        :param accountid: accountid for the Summoner we want to grab updated user match info for
+        """
         self.logger.info("Update recent usermatches for account id: {}".format(accountid))
         # Get recent matches from API
         matchlist_json = self.rc.getSummonerMatchList(accountid)
