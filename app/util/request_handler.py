@@ -12,7 +12,8 @@ class RequestHandler:
         self.api_endpoint = api_endpoint
         self.api_key = api_key
         # Init RiotConnector
-        self.rc = RiotConnector(self.api_endpoint, self.api_key)
+        # self.rc = RiotConnector(self.api_endpoint, self.api_key)
+        self._rc = None
 
         # Init DB Session
         self.db = db
@@ -20,7 +21,19 @@ class RequestHandler:
         self.logger.info(self)
 
     def __repr__(self):
-        return "<RequestHandler(api_endpoint = {}, api_key = {})>".format(self.api_endpoint, self.api_key)
+        return "<RequestHandler(db = {}, api_endpoint = {}, api_key = {})>".format(self.db, self.api_endpoint,
+                                                                                   self.api_key)
+
+    @property
+    def rc(self):
+        if self._rc is None:
+            if not self.api_key or not self.api_endpoint:
+                self.logger.error(
+                    "Trying to create RiotConnector with uninitialized variables: api_key: {}, api_endpoint: {}".format(
+                        self.api_key, self.api_endpoint))
+            self._rc = RiotConnector(self.api_endpoint, self.api_key)
+            self.logger.info("Lazily loaded RiotConnector")
+        return self._rc
 
     def close(self):
         self.logger.info("session closed")
@@ -67,13 +80,13 @@ class RequestHandler:
         :param kwargs: kwargs needed to create that Model
         :return: Created Model object
         """
-        self.logger.info("get or create on {}".format(model.__tablename__))
+        self.logger.debug("get or create on {}".format(model.__tablename__))
         item = self.db.session.query(model).filter_by(**kwargs).first()
         if item:
-            self.logger.info("item exists: {}".format(item))
+            self.logger.debug("item exists: {}".format(item))
             return item
         else:
-            self.logger.info("item does not exist, creating it now")
+            self.logger.debug("item does not exist, creating it now")
             item = model(**kwargs)
             self.logger.debug("created {}, adding item to db now".format(item))
             self.db.session.add(item)
