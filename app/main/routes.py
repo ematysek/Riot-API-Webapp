@@ -45,6 +45,6 @@ def test():
     logger.info(os.environ.get('API_KEY'))
     rh = RequestHandler(db, api_endpoint=os.environ.get('API_ENDPOINT'), api_key=os.environ.get('API_KEY'))
     sums = rh.get_all_summoners()
-    matches = rh.get_all_usermatches()
+    matches = rh.get_all_db_usermatches()
     leagues = rh.get_all_userleagues()
     return render_template('test.html', summoners=sums, matches=matches, leagues=leagues, form=form)

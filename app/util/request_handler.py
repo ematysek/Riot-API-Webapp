@@ -37,7 +37,7 @@ class RequestHandler:
         self.logger.debug(q)
         return q
 
-    def get_all_usermatches(self):
+    def get_all_db_usermatches(self):
         """
         Get all UserMatches currently in the DB.
         :return: List of all UserMatch objs in the DB
