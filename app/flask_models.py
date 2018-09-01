@@ -2,6 +2,7 @@ from app import db
 
 
 class Summoner(db.Model):
+    # TODO probably need to implement a searchable_name column since League does not care about capatalization or whitespace
     __tablename__ = 'summoners'
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)  # summonerid

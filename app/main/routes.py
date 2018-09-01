@@ -7,6 +7,7 @@ from app import db
 from app.main import bp
 from app.main.forms import SummonerSearchForm
 from app.util import RequestHandler
+from app.flask_models import *
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,8 @@ def search_name(summoner_name):
     retrieved_sum = rh.insert_or_update_summoner(summoner_name)
     rh.update_recent_usermatches(retrieved_sum.accountid)
     rh.update_leagues(retrieved_sum.id)
-    return render_template('summoner.html', summoner=retrieved_sum, form=form)
+    updated_sum = rh.get_summoner_by_id(retrieved_sum.id)
+    return render_template('summoner.html', summoner=updated_sum, form=form)
 
 
 @bp.route("/test", methods=['GET', 'POST'])

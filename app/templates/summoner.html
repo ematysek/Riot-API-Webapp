@@ -2,7 +2,26 @@
 {% block main %}
 <main role="main" class="container">
     <div class="starter-template">
-        <h1>{{ summoner }}</h1>
+        <h1>{{ summoner.name }}</h1>
+        <table class="lead">
+            <tr>
+                <th>id</th>
+                <th>gameid</th>
+                <th>champion</th>
+            </tr>
+            {% for match in summoner.matches %}
+            <tr>
+                <td>{{ match.id }}</td>
+                <td>{{ match.gameid }}</td>
+                <td>{{ match.champion }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% if summoner.leagues %}
+            {% for league in summoner.leagues %}
+                <p class="lead">{{ league }}</p>
+            {% endfor %}
+        {% endif %}
     </div>
 </main><!-- /.container -->
 {% endblock main %}

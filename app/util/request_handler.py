@@ -104,6 +104,14 @@ class RequestHandler:
             self.insert_or_update_summoner(name)
             return self.get_accountid_by_name(name)
 
+    def get_summoner_by_id(self, summonerid):
+        """
+        Get Summoner object by summonerid from the DB.
+        :param summonerid:
+        :return: Summoner Model object or None if it doesn't exist in the DB
+        """
+        return self.db.session.query(Summoner).filter(Summoner.id == summonerid).first()
+
     def get_summoner_by_name(self, name: str) -> Optional[Summoner]:
         """
         Get the Summoner object by specified name.
