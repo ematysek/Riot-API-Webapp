@@ -5,13 +5,15 @@
         <h1>{{ summoner.name }}</h1>
         <table class="lead">
             <tr>
-                <th>id</th>
+                <th>name</th>
+                <th>date_time</th>
                 <th>gameid</th>
                 <th>champion</th>
             </tr>
             {% for match in summoner.matches %}
             <tr>
-                <td>{{ match.id }}</td>
+                <td>{{ summoner.name }}</td>
+                <td>{{ match.timestamp }}</td>
                 <td>{{ match.gameid }}</td>
                 <td>{{ match.champion }}</td>
             </tr>

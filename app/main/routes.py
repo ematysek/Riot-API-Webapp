@@ -1,9 +1,8 @@
 import logging
 import os
 
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 
-from app import db
 from app.main import bp
 from app.main.forms import SummonerSearchForm
 from app.util import RequestHandler
@@ -31,6 +30,12 @@ def search_name(summoner_name):
     rh = RequestHandler(db, api_endpoint=os.environ.get('API_ENDPOINT'), api_key=os.environ.get('API_KEY'))
     # For now we will update all summoner information on search
     retrieved_sum = rh.insert_or_update_summoner(summoner_name)
+    if not retrieved_sum:
+        flash("Error getting Summoner from API, returning info stored in the DB")
+        retrieved_sum = rh.get_summoner_by_name(summoner_name)
+    if not retrieved_sum:
+        logger.warning("Could not get summoner object for {}".format(summoner_name))
+        return render_template('summoner.html', form=form)
     rh.update_recent_usermatches(retrieved_sum.accountid)
     rh.update_leagues(retrieved_sum.id)
     updated_sum = rh.get_summoner_by_id(retrieved_sum.id)

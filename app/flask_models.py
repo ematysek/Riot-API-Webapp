@@ -9,7 +9,7 @@ class Summoner(db.Model):
     accountid = db.Column(db.Integer, unique=True, nullable=False)
     name = db.Column(db.String, index=True)
     profileiconid = db.Column(db.Integer)
-    revisiondate = db.Column(db.Integer)
+    revisiondate = db.Column(db.TIMESTAMP)
     summonerlevel = db.Column(db.Integer)
 
     matches = db.relationship("UserMatch", back_populates="summoner")
@@ -26,16 +26,17 @@ class UserMatch(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     accountid = db.Column(db.Integer, db.ForeignKey('summoners.accountid'), index=True)
+    gameid = db.Column(db.BigInteger, db.ForeignKey('matches.gameid'), index=True)
     lane = db.Column(db.String)
-    gameid = db.Column(db.Integer)
     champion = db.Column(db.Integer)
     platformid = db.Column(db.String)
-    timestamp = db.Column(db.Integer)
+    timestamp = db.Column(db.TIMESTAMP)
     queue = db.Column(db.Integer)
     role = db.Column(db.String)
     season = db.Column(db.Integer)
 
     summoner = db.relationship("Summoner", back_populates="matches")
+    match = db.relationship("Match", back_populates="user_matches")
 
     def __repr__(self):
         return "<UserMatch(accountid={}, lane={}, gameid={}, champion={}, platformid={}, timestamp={}, queue={}," \
@@ -72,3 +73,16 @@ class UserLeague(db.Model):
                                                      self.tier, self.leaguepoints, self.hotstreak, self.veteran,
                                                      self.playerorteamid, self.leaguename, self.playerorteamname,
                                                      self.inactive, self.freshblood, self.leagueid)
+
+
+class Match(db.Model):
+    __tablename__ = "matches"
+
+    gameid = db.Column(db.BigInteger, primary_key=True)
+    seasonid = db.Column(db.Integer)
+    queueid = db.Column(db.Integer)
+    gameversion = db.Column(db.String)
+    gameduration = db.Column(db.Integer)
+    gamecreation = db.Column(db.TIMESTAMP)
+
+    user_matches = db.relationship("UserMatch", back_populates="match")

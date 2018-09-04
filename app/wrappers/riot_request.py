@@ -1,5 +1,7 @@
 import logging
 import time
+from threading import Thread
+from queue import Queue
 
 import requests
 
@@ -60,6 +62,20 @@ class RiotConnector:
         time_taken = time.time() - start
         self.logger.info("get_summoner_leagues_by_summoner_id {} time taken: {}".format(summonerid, time_taken))
         self.logger.info("Response URL: {}".format(response.url))
+        self.logger.info("Response code: {}".format(response.status_code))
+        if not response.status_code == 200:
+            return None
+        return response.json()
+
+    def get_match(self, gameid):
+        self.logger.info("Getting match from gameid: {}".format(gameid))
+        payload = {'api_key': self.api_key}
+        start = time.time()
+        response = requests.get("{}/lol/match/v3/matches/{}".format(self.api_endpoint, gameid),
+                                params=payload)
+        time_taken = time.time() - start
+        self.logger.info("get_match {} time taken: {}".format(gameid, time_taken))
+        self.logger.debug("URL: {}".format(response.url))
         self.logger.info("Response code: {}".format(response.status_code))
         if not response.status_code == 200:
             return None

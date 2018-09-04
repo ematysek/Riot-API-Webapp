@@ -1,7 +1,8 @@
 import logging
 from typing import Optional
+from datetime import datetime
 
-from app.flask_models import Summoner, UserMatch, UserLeague
+from app.flask_models import Summoner, UserMatch, UserLeague, Match
 from app.wrappers import RiotConnector
 
 
@@ -115,7 +116,7 @@ class RequestHandler:
     def get_summoner_by_name(self, name: str) -> Optional[Summoner]:
         """
         Get the Summoner object by specified name.
-        If the Summoner does not exist in the DB, then we call `insert_or_update_summoner'.
+        If the Summoner does not exist in the DB, then we call `insert_or_update_summoner`.
 
         This method is useful because Summoner attributes summonerid and accountid don't change, so in functions that
         just need these attributes we do not need to make an API call if the summoner exists in the DB.
@@ -148,7 +149,9 @@ class RequestHandler:
             self.logger.warning("Summoner JSON not returned by RiotConnector for name: {}".format(name))
             return None
         summoner_json = RequestHandler.lower_keys(summoner_json)
+        # summoner_json['revisiondate'] = datetime.utcfromtimestamp(summoner_json['revisiondate'])
         summoner = Summoner(**summoner_json)
+        summoner.revisiondate = datetime.utcfromtimestamp(summoner.revisiondate // 1000)
         self.logger.debug("Summoner constructed: {}".format(summoner))
         self.db.session.merge(summoner)
         self.db.session.commit()
@@ -163,7 +166,7 @@ class RequestHandler:
         # Get leagues data from API
         leagues_json = self.rc.get_summoner_leagues_by_summoner_id(summonerid)
         if not leagues_json:
-            self.logger.warning("Leagues JSON not returned by RiotCeonnector for summonerid: {}".format(summonerid))
+            self.logger.warning("Leagues JSON not returned by RiotConnector for summonerid: {}".format(summonerid))
             return
         # leagues_json = RequestHandler.lower_keys(leagues_json)
         self.logger.debug("Leagues json for summonerid {}: {}".format(summonerid, leagues_json))
@@ -192,9 +195,50 @@ class RequestHandler:
         matchlist_json = self.rc.getSummonerMatchList(accountid)
         self.logger.debug("Matchlist json: ".format(matchlist_json))
         for match in matchlist_json['matches']:
+            # First make sure the matches exist in 'matches' table, grab them from API if not
+            if not self.insert_match(match.get('gameId')):
+                self.logger.warning(
+                    "gameid {} was not found in DB and could not be inserted, skipping".format(match.get('gameId')))
+                continue
             match['accountid'] = accountid
-            self.get_or_create(UserMatch, **RequestHandler.lower_keys(match))
+            # self.get_or_create(UserMatch, **RequestHandler.lower_keys(match))
+            match_model = UserMatch(**RequestHandler.lower_keys(match))
+            exists = self.db.session.query(UserMatch).filter_by(accountid=match_model.accountid,
+                                                                gameid=match_model.gameid).first()
+            if exists:
+                continue
+            match_model.timestamp = datetime.utcfromtimestamp(match_model.timestamp // 1000)
+            self.db.session.add(match_model)
         self.db.session.commit()
+
+    def insert_match(self, gameid):
+        """
+        If gameid does not exist in the DB, pull match from API and insert into DB. Otherwise do nothing.
+        :param gameid: gameid for the match to insert
+        """
+        if Match.query.filter(Match.gameid == gameid).first():
+            self.logger.info("Match {} already exists in the DB")
+            return True
+        match_json = self.rc.get_match(gameid)
+        if not match_json:
+            self.logger.warning("API did not return data for this gameid: {}".format(gameid))
+            return False
+        match_json = self.lower_keys(match_json)
+        # Get column names
+        match_columns = Match.__table__.columns.keys()
+        # Remove all k:v pairs that do not match column names
+        to_del = []
+        for k, v in match_json.items():
+            if k not in match_columns:
+                to_del.append(k)
+                # del match_json[k]
+        for k in to_del:
+            del match_json[k]
+        match = Match(**match_json)
+        match.gamecreation = datetime.utcfromtimestamp(match.gamecreation // 1000)
+        self.db.session.add(match)
+        self.db.session.commit()
+        return True
 
     @staticmethod
     def lower_keys(somejson):

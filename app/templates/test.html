@@ -26,13 +26,13 @@
         {% if matches %}
         <table class="lead">
             <tr>
-                <th>id</th>
+                <th>Summoner</th>
                 <th>gameid</th>
                 <th>champion</th>
             </tr>
             {% for match in matches %}
             <tr>
-                <td>{{ match.id }}</td>
+                <td>{{ match.summoner.name }}</td>
                 <td>{{ match.gameid }}</td>
                 <td>{{ match.champion }}</td>
             </tr>
