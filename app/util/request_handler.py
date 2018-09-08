@@ -217,7 +217,7 @@ class RequestHandler:
         :param gameid: gameid for the match to insert
         """
         if Match.query.filter(Match.gameid == gameid).first():
-            self.logger.info("Match {} already exists in the DB")
+            self.logger.info("Match {} already exists in the DB".format(gameid))
             return True
         match_json = self.rc.get_match(gameid)
         if not match_json:
