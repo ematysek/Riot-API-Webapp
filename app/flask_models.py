@@ -11,6 +11,7 @@ class Summoner(db.Model):
     profileiconid = db.Column(db.Integer)
     revisiondate = db.Column(db.TIMESTAMP)
     summonerlevel = db.Column(db.Integer)
+    last_updated = db.Column(db.TIMESTAMP, server_default=db.func.now(), onupdate=db.func.now())
 
     matches = db.relationship("UserMatch", back_populates="summoner")
     leagues = db.relationship("UserLeague", back_populates="summoner")

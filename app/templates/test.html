@@ -29,12 +29,14 @@
                 <th>Summoner</th>
                 <th>gameid</th>
                 <th>champion</th>
+                <th>season</th>
             </tr>
             {% for match in matches %}
             <tr>
                 <td>{{ match.summoner.name }}</td>
                 <td>{{ match.gameid }}</td>
                 <td>{{ match.champion }}</td>
+                <td>{{ match.season }}</td>
             </tr>
             {% endfor %}
         </table>
